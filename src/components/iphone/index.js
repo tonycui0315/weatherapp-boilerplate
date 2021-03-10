@@ -43,15 +43,15 @@ export default class Iphone extends Component {
 		const subTempStyles = this.state.temp ? `${style.subtemp} ${style.filled}` : style.temperature;
 		const cloudStyles = this.state.temp ? `${style.subtemp} ${style.percentage}` : style.temperature;
 
-		function refreshPage() {
-			window.location.reload(false);
-		}
+		// function refreshPage() {
+		// 	window.location.reload(false);
+		// }
 		
 		// display all weather data
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
-					<div><button onClick={refreshPage}>Click to reload!</button></div>
+					<div><button class={style.icon} onClick={this.fetchWeatherData}></button></div>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
 					<div class={ tempStyles }>{ this.state.temp }</div>
