@@ -19,6 +19,10 @@ export default class Iphone extends Component {
 		this.state.temp = "";
 		// units state
 		this.state.units = "metric";
+		// latitude state
+		this.state.lat = "51.509865";
+		// longitude state
+		this.state.lon = "-0.118092";
 		// button display state
 		this.setState({ display: true });
 	}
@@ -32,10 +36,35 @@ export default class Iphone extends Component {
 		this.state.display == true ? null : this.fetchWeatherData();
 	};
 
+	// function to get latitude and longitude
+	getLocation = () => {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(this.getCoor, this.errorCoor, {
+				maximumAge: 10000,
+				timeout: 5000,
+				enableHighAccuracy: true,
+			});
+		} else {
+			console.log("Geolocation is not supported by this browser.");
+		}
+	};
+
+	// function to set latitude and longitude state
+	getCoor = (position) => {
+		this.setState({ lat: position.coords.latitude });
+		this.setState({ lon: position.coords.longitude });
+		this.state.display == true ? null : this.fetchWeatherData();
+	};
+
+	// function to return latitude and longitude error
+	errorCoor = (error) => {
+		console.log(error);
+	};
+
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = `http://api.openweathermap.org/data/2.5/weather?q=London&units=${this.state.units}&APPID=//API_KEY`;
+		var url = `http://api.openweathermap.org/data/2.5/weather?lat=${this.state.lat}&lon=${this.state.lon}&units=${this.state.units}&APPID=//API_KEY`;
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -85,6 +114,13 @@ export default class Iphone extends Component {
 							src={`../../assets/icons/${this.state.units}.png`}
 							width="50"
 							onClick={this.changeUnits}
+						/>
+					</button>{" "}
+					<button>
+						<img
+							src="../../assets/icons/location.png"
+							width="50"
+							onClick={this.getLocation}
 						/>
 					</button>
 				</div>
