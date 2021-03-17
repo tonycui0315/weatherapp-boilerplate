@@ -8,6 +8,7 @@ import style_iphone from "../button/style_iphone";
 import $ from "jquery";
 // import the Button component
 import Button from "../button";
+import Icon from "../icon";
 
 export default class Iphone extends Component {
 	//var Iphone = React.createClass({
@@ -77,6 +78,11 @@ export default class Iphone extends Component {
 		this.setState({ display: false });
 	};
 
+	// get weather data as soon as page is opened/refreshed
+	componentDidMount() {
+		this.fetchWeatherData();
+	}
+
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
@@ -102,27 +108,19 @@ export default class Iphone extends Component {
 		return (
 			<div class={style.container}>
 				<div>
-					<button>
-						<img
-							src="../../assets/icons/refresh.png"
-							width="50"
-							onClick={refreshPage}
-						/>
-					</button>{" "}
-					<button>
-						<img
-							src={`../../assets/icons/${this.state.units}.png`}
-							width="50"
-							onClick={this.changeUnits}
-						/>
-					</button>{" "}
-					<button>
-						<img
-							src="../../assets/icons/location.png"
-							width="50"
-							onClick={this.getLocation}
-						/>
-					</button>
+					<Icon
+						src="../../assets/icons/refresh1.png"
+						clickFunction={refreshPage}
+					/>{" "}
+					<Icon src="../../assets/icons/alert.png" />{" "}
+					<Icon
+						src={`../../assets/icons/${this.state.units}.png`}
+						clickFunction={this.changeUnits}
+					/>{" "}
+					<Icon
+						src="../../assets/icons/location.png"
+						clickFunction={this.getLocation}
+					/>
 				</div>
 				<div class={style.header}>
 					<div class={style.city}>{this.state.locate}</div>
@@ -132,14 +130,14 @@ export default class Iphone extends Component {
 					<div class={cloudStyles}>{this.state.cloud}</div>
 				</div>
 				<div class={style.details}></div>
-				<div class={style_iphone.container}>
+				{/* <div class={style_iphone.container}>
 					{this.state.display ? (
 						<Button
 							class={style_iphone.button}
 							clickFunction={this.fetchWeatherData}
 						/>
 					) : null}
-				</div>
+				</div> */}
 			</div>
 		);
 	}
