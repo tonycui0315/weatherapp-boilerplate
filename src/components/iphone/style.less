@@ -8,7 +8,7 @@
 	width: 414px;
 	height: 736px;
 	text-align: center;
-	padding-top: 80px;
+	padding-top: 40px;
 	margin: 0 auto;
 }
 .header {
@@ -39,10 +39,7 @@
 	font-weight: 400;
 }
 .icon {
-	background-image: url("../../assets/icons/refresh.png");
-	display: inline-block;
-	width: 30px;
-	height: 30px;
+	background-image: url("../../assets/backgrounds/iphone2.jpg");
 }
 .percentage:after {
 	content: "%";
@@ -50,8 +47,16 @@
 .mm:after {
 	content: "mm";
 }
-.filled:after {
+.metric:after {
 	content: "° C";
+	font-size: 0.5em;
+	font-weight: 200;
+	display: inline-block;
+	padding-top: 5px;
+	vertical-align: top;
+}
+.imperial:after {
+	content: "° F";
 	font-size: 0.5em;
 	font-weight: 200;
 	display: inline-block;
