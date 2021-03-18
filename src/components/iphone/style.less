@@ -8,7 +8,7 @@
 	width: 414px;
 	height: 736px;
 	text-align: center;
-	padding-top: 80px;
+	padding-top: 40px;
 	margin: 0 auto;
 }
 .header {
@@ -39,10 +39,7 @@
 	font-weight: 400;
 }
 .icon {
-	background-image: url("../../assets/icons/refresh.png");
-	display: inline-block;
-	width: 30px;
-	height: 30px;
+	background-image: url("../../assets/backgrounds/iphone2.jpg");
 }
 .percentage:after {
 	content: "%";
@@ -50,11 +47,86 @@
 .mm:after {
 	content: "mm";
 }
-.filled:after {
+.metric:after {
 	content: "° C";
 	font-size: 0.5em;
 	font-weight: 200;
 	display: inline-block;
 	padding-top: 5px;
 	vertical-align: top;
+}
+.imperial:after {
+	content: "° F";
+	font-size: 0.5em;
+	font-weight: 200;
+	display: inline-block;
+	padding-top: 5px;
+	vertical-align: top;
+}
+
+.alert{
+	z-index: 1;
+    position: relative;
+}
+
+
+.button1 {
+    font-size: 20px;
+	border: none;
+	color: red;
+	width: 20rem;
+	border-radius: 12px;
+	padding-top: 0.5em;
+	display: none;
+	z-index: 3;
+    position: absolute;
+	right: 41.65%;
+	bottom: 50%;
+	opacity: 1;
+}
+
+.button2 {
+	border: none;
+	padding: 15px 35px;
+	text-align: center;
+	color: grey;
+}
+
+.button3 {
+	border: 2px solid #e7e7e7;
+	border-left-style: none;
+	border-bottom-style: none;
+	font-size: 18px;
+	color: grey;
+	float: left;
+	width: 9.5rem;
+	height: 2.5rem;
+}
+
+.button3:hover {background-color: white}
+
+.button3:active {
+  background-color: white;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.button4 {
+	border: 2px solid #e7e7e7;
+	border-right-style: none;
+	border-bottom-style: none;
+	font-size: 18px;
+	font-weight: 600;
+	color: grey;
+	float: right;
+	width: 	9.5rem;
+	height: 2.5rem;
+}
+
+.button4:hover {background-color: white}
+
+.button4:active {
+  background-color: white;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
