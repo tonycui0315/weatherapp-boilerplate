@@ -29,7 +29,7 @@ export default class Iphone extends Component {
 	// function that checks if any alerts need to be displayed
 	showAlert = () => {
 		if (this.state.temp > "5") {
-			document.getElementById('btn').textContent = "Warning the temperature is " + this.state.temp + " " + this.state.units + "" + " Take actions to protect vine crops!";
+			document.getElementById('btn').textContent = "Warning the temperature is " + this.state.temp + " " + this.state.unitsymbol + "" + " Take actions to protect vine crops!";
 			this.displayAlert();
 		}
 		else if (this.state.cloudProb > "50") {
@@ -63,9 +63,9 @@ export default class Iphone extends Component {
 	// function to change units
 	changeUnits = () => {
 		if (this.state.units == "metric") {
-			this.setState({ units: "imperial", unitsymbol: "° F" });
+			this.setState({ units: "imperial", unitsymbol: "°F", windsymbol: " mph"});
 		} else {
-			this.setState({ units: "metric", unitsymbol: "° C" });
+			this.setState({ units: "metric", unitsymbol: "°C", windsymbol: " kmph" });
 		}
 		this.state.display == true ? null : this.fetchWeatherData();
 	};
@@ -125,11 +125,12 @@ export default class Iphone extends Component {
 		this.setState({
 			// units state
 			units: "metric",
-			unitsymbol: "° C",
+			unitsymbol: "°C",
+			windsymbol: " kmph",
 			// latitude state
-			lat: "51.509865",
+			lat: "41.3851",
 			// longitude state
-			lon: "-0.118092",
+			lon: "2.1734",
 		});
 	}
 
@@ -151,7 +152,11 @@ export default class Iphone extends Component {
 				: `${style.subtemp} ${style.imperial}`
 			: style.temperature;
 		const cloudStyles = this.state.temp ? `${style.subtemp} ${style.percentage}` : style.temperature;
-		const windStyles = this.state.temp ? `${style.subtemp} ${style.speed}` : style.temperature;
+		const windStyles = this.state.temp 
+			? this.state.units == "metric" 
+				? `${style.subtemp} ${style.metricWind}` 
+				: `${style.subtemp} ${style.imperialWind}`
+			: style.temperature;
 
 		function refreshPage() {
 			window.location.reload(false);
@@ -159,53 +164,54 @@ export default class Iphone extends Component {
 
 		// display all weather data
 		return (
-			<div class={style.container}>
-				<div class={style.mainalert}><button class={style.button1} id="confirm">
-					Alert
-				<button class={style.button2} id="btn" onClick={() => this.showAlert(this.id)}>
-						Message goes here
-				</button>
-					<button class={style.button3} onClick={this.remindAgain}>Remind again </button>
-					<button class={style.button4} onClick={this.confirmClose}>Confirm</button>
-				</button>
-				</div>
+				<div class={style.container} id = "container">
+					<div>
+					<button class={style.button1} id="confirm">
+						Alert
+					<button class={style.button2} id="btn" onClick={() => this.showAlert(this.id)}>
+							Message goes here
+					</button>
+						<button class={style.button3} onClick={this.remindAgain}>Remind again </button>
+						<button class={style.button4} onClick={this.confirmClose}>Confirm</button>
+					</button>
+					</div>
+					<div>
+						<Icon
+							src="../../assets/icons/refresh1.png"
+							clickFunction={refreshPage}
+						/>{" "}
+						<Icon src="../../assets/icons/alert.png"
+							clickFunction={this.showAlert}
+						/>{" "}
+						<Icon
+							src={`../../assets/icons/${this.state.units}.png`}
+							clickFunction={this.changeUnits}
+						/>{" "}
+						<Icon
+							src="../../assets/icons/location.png"
+							clickFunction={this.getLocation}
+						/>
+					</div>
+					{/* <button class={refreshStyles} onClick={this.fetchWeatherData}>Refresh</button>
+					<button class = {settingsStyles} onClick= {this.redirectSET}>Settings</button> */}
 
-				<div>
-					<Icon
-						src="../../assets/icons/refresh1.png"
-						clickFunction={refreshPage}
-					/>{" "}
-					<Icon src="../../assets/icons/alert.png"
-						clickFunction={this.getAlert}
-					/>{" "}
-					<Icon
-						src={`../../assets/icons/${this.state.units}.png`}
-						clickFunction={this.changeUnits}
-					/>{" "}
-					<Icon
-						src="../../assets/icons/location.png"
-						clickFunction={this.getLocation}
-					/>
+					<div class={style.alert}>
+						<div class={style.date}>{this.state.dayDate}{this.state.time}</div>
+						<div class={style.city}>{this.state.locate}</div>
+						<div><img style={{ width: '30px' }} src={this.state.icon} /></div>
+						<div class={style.conditions}>{this.state.cond}</div>
+						<div class={tempStyles}>{this.state.temp}</div>
+						<div class={subTempStyles}>{this.state.temp2}</div>
+						<div class={cloudStyles}>{this.state.cloud}</div>
+						<div class={cloudStyles}>{this.state.humd}</div>
+						<div class={windStyles}>{this.state.wind}</div>
+					</div>
+					<div class={style.details}></div>
+					{/* <div class={style_iphone.container}>
+						{this.state.display ? <Button class={style_iphone.button} clickFunction={this.fetchWeatherData} /> : null}
+					</div> */}
 				</div>
-				{/* <button class={refreshStyles} onClick={this.fetchWeatherData}>Refresh</button>
-				<button class = {settingsStyles} onClick= {this.redirectSET}>Settings</button> */}
-
-				<div class={style.header}>
-					<div class={style.date}>{this.state.dayDate}{this.state.time}</div>
-					<div class={style.city}>{this.state.locate}</div>
-					<div><img style={{ width: '30px' }} src={this.state.icon} /></div>
-					<div class={style.conditions}>{this.state.cond}</div>
-					<div class={tempStyles}>{this.state.temp}</div>
-					<div class={subTempStyles}>{this.state.temp2}</div>
-					<div class={cloudStyles}>{this.state.cloud}</div>
-					<div class={cloudStyles}>{this.state.humd}</div>
-					<div class={windStyles}>{this.state.wind}</div>
-				</div>
-				<div class={style.details}></div>
-				<div class={style_iphone.container}>
-					{this.state.display ? <Button class={style_iphone.button} clickFunction={this.fetchWeatherData} /> : null}
-				</div>
-			</div>
+			
 		);
 	}
 
@@ -216,7 +222,8 @@ export default class Iphone extends Component {
 		var temp_c = Math.round(parsed_json['main']['temp']);
 		var conditions = parsed_json['weather']['0']['description'];
 		var humidity = parsed_json['main']['humidity'];
-		var wind_speed = Math.round(parsed_json['wind']['speed']);
+		var wind_speed;
+		this.state.units === 'metric' ? wind_speed = Math.round((parsed_json['wind']['speed'])*3.6) : wind_speed = Math.round(parsed_json['wind']['speed']);
 
 		var day = new Date();
 		var weekDay = day.getDate() + "." + (day.getMonth() + 1) + "." + day.getFullYear();
