@@ -73,11 +73,16 @@
     "webpack-dev-server": "^1.15.0"
   },
   "dependencies": {
+    "@reach/menu-button": "^0.13.2",
+    "bootstrap": "^5.0.0-beta2",
+    "open-weather-icons": "0.0.8",
     "preact": "^6.0.0",
     "preact-compat": "^3.0.0",
     "preact-router": "^2.0.0",
     "promise-polyfill": "^6.0.2",
     "proptypes": "^0.14.3",
+    "react-menu-button": "^0.2.0",
+    "react-router-dom": "^5.2.0",
     "serve": "^2.0.0"
   },
   "main": "webpack.config.babel.js",

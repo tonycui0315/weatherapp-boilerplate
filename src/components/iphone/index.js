@@ -9,30 +9,75 @@ import $ from "jquery";
 // import the Button component
 import Button from "../button";
 import Icon from "../icon";
+import { refresh } from "less";
+import { Link } from "react-router-dom";
 
 export default class Iphone extends Component {
-	//var Iphone = React.createClass({
+	// var Iphone = React.createClass({
 
 	// a constructor with initial set states
 	constructor(props) {
 		super(props);
 		// temperature state
 		this.state.temp = "";
-		// units state
-		this.state.units = "metric";
-		// latitude state
-		this.state.lat = "51.509865";
-		// longitude state
-		this.state.lon = "-0.118092";
 		// button display state
 		this.setState({ display: true });
 	}
+	// function that checks if any alerts need to be displayed
+	showAlert = () => {
+		if (document.getElementById("btn")) {
+			if (this.state.temp > "5") {
+				document.getElementById("btn").textContent =
+					"Warning the temperature is " +
+					this.state.temp +
+					" " +
+					this.state.unitsymbol +
+					"" +
+					" Take actions to protect vine crops!";
+				this.displayAlert();
+			} else if (this.state.cloudProb > "50") {
+				document.getElementById("btn").textContent =
+					"Warning the chance of rain is " +
+					this.state.cloudProb +
+					"%" +
+					" Take actions to protect vine crops!";
+				this.displayAlert();
+			}
+		}
+	};
+	// function for alert remind again button
+	remindAgain = () => {
+		document.getElementById("confirm").style.display = "none";
+		document.getElementById("container").style.opacity = "1";
+		document.getElementById("container").style.filter = "brightness(1)";
+		window.setTimeout(this.displayAlert, 5000);
+	};
 
+	// function for displaying the alert on screen
+	displayAlert = () => {
+		document.getElementById("confirm").style.display = "inline";
+		document.getElementById("container").style.opacity = "0.8";
+		document.getElementById("container").style.filter = "brightness(0.8)";
+		document.getElementById("confirm").style.opacity = "1";
+	};
+
+	// function for alert confirm close button
+	confirmClose = () => {
+		document.getElementById("confirm").style.display = "none";
+		document.getElementById("container").style.opacity = "1";
+		document.getElementById("container").style.filter = "brightness(1)";
+	};
+
+	// function to change units
 	changeUnits = () => {
 		if (this.state.units == "metric") {
-			this.setState({ units: "imperial" });
+			this.setState({
+				units: "imperial",
+				unitsymbol: "°F",
+				windsymbol: " mph",
+			});
 		} else {
-			this.setState({ units: "metric" });
+			this.setState({ units: "metric", unitsymbol: "°C", windsymbol: " kmph" });
 		}
 		this.state.display == true ? null : this.fetchWeatherData();
 	};
@@ -65,7 +110,16 @@ export default class Iphone extends Component {
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = `http://api.openweathermap.org/data/2.5/weather?lat=${this.state.lat}&lon=${this.state.lon}&units=${this.state.units}&APPID=//API_KEY`;
+		// var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=88411ea22f5cdf74f7ff18376c10d750";
+		console.log(this.state.units);
+		var url =
+			"http://api.openweathermap.org/data/2.5/weather?lat=" +
+			this.state.lat +
+			"&lon=" +
+			this.state.lon +
+			"&units=" +
+			this.state.units +
+			"&APPID=4523e5d69e0d877074736851549b22be";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -80,8 +134,46 @@ export default class Iphone extends Component {
 
 	// get weather data as soon as page is opened/refreshed
 	componentDidMount() {
+		console.log(this.props.location.state);
+		this.props.location.state &&
+			this.setState({
+				lat: this.props.location.state.lat,
+				lon: this.props.location.state.lon,
+			});
+		this.props.location.state &&
+			(this.props.location.state.units === "metric"
+				? this.setState({
+						units: "metric",
+						unitsymbol: "°C",
+						windsymbol: " kmph",
+				  })
+				: this.setState({
+						units: "imperial",
+						unitsymbol: "°F",
+						windsymbol: " mph",
+				  }));
+
 		this.fetchWeatherData();
+		//window.setTimeout(this.displayAlert, 1000);
+		//window.setTimeout(this.showAlert, 1000);
+		setInterval(this.showAlert, 10000);
 	}
+	componentWillMount() {
+		this.setState({
+			// units state
+			units: "metric",
+			unitsymbol: "°C",
+			windsymbol: " kmph",
+			// latitude state
+			lat: "41.3851",
+			// longitude state
+			lon: "2.1734",
+		});
+	}
+
+	redirectSET = () => {
+		window.location.replace();
+	};
 
 	// the main render method for the iphone component
 	render() {
@@ -99,6 +191,11 @@ export default class Iphone extends Component {
 		const cloudStyles = this.state.temp
 			? `${style.subtemp} ${style.percentage}`
 			: style.temperature;
+		const windStyles = this.state.temp
+			? this.state.units == "metric"
+				? `${style.subtemp} ${style.metricWind}`
+				: `${style.subtemp} ${style.imperialWind}`
+			: style.temperature;
 
 		function refreshPage() {
 			window.location.reload(false);
@@ -106,38 +203,79 @@ export default class Iphone extends Component {
 
 		// display all weather data
 		return (
-			<div class={style.container}>
+			<div class={style.container} id="container">
+				<div>
+					<button class={style.button1} id="confirm">
+						Alert
+						<button
+							class={style.button2}
+							id="btn"
+							onClick={() => this.showAlert(this.id)}
+						>
+							Message goes here
+						</button>
+						<button class={style.button3} onClick={this.remindAgain}>
+							Remind again{" "}
+						</button>
+						<button class={style.button4} onClick={this.confirmClose}>
+							Confirm
+						</button>
+					</button>
+				</div>
 				<div>
 					<Icon
 						src="../../assets/icons/refresh1.png"
 						clickFunction={refreshPage}
 					/>{" "}
-					<Icon src="../../assets/icons/alert.png" />{" "}
 					<Icon
-						src={`../../assets/icons/${this.state.units}.png`}
-						clickFunction={this.changeUnits}
+						src="../../assets/icons/alert.png"
+						clickFunction={this.showAlert}
 					/>{" "}
+					<Link
+						to={{
+							pathname: "/iphonesettings",
+							state: {
+								units: this.state.units,
+								lat: this.state.lat,
+								lon: this.state.lon,
+							},
+						}}
+						className={style.button}
+					>
+						<img src={`../../assets/icons/settings.png`} width="50" />
+					</Link>
+					{/* <Icon
+						src={`../../assets/icons/settings.png`}
+						clickFunction={this.changeUnits}
+					/>{" "} */}
 					<Icon
 						src="../../assets/icons/location.png"
 						clickFunction={this.getLocation}
 					/>
 				</div>
-				<div class={style.header}>
+				{/* <button class={refreshStyles} onClick={this.fetchWeatherData}>Refresh</button>
+					<button class = {settingsStyles} onClick= {this.redirectSET}>Settings</button> */}
+
+				<div class={style.alert}>
+					<div class={style.date}>
+						{this.state.dayDate}
+						{this.state.time}
+					</div>
 					<div class={style.city}>{this.state.locate}</div>
+					<div>
+						<img style={{ width: "30px" }} src={this.state.icon} />
+					</div>
 					<div class={style.conditions}>{this.state.cond}</div>
 					<div class={tempStyles}>{this.state.temp}</div>
 					<div class={subTempStyles}>{this.state.temp2}</div>
 					<div class={cloudStyles}>{this.state.cloud}</div>
+					<div class={cloudStyles}>{this.state.humd}</div>
+					<div class={windStyles}>{this.state.wind}</div>
 				</div>
 				<div class={style.details}></div>
 				{/* <div class={style_iphone.container}>
-					{this.state.display ? (
-						<Button
-							class={style_iphone.button}
-							clickFunction={this.fetchWeatherData}
-						/>
-					) : null}
-				</div> */}
+						{this.state.display ? <Button class={style_iphone.button} clickFunction={this.fetchWeatherData} /> : null}
+					</div> */}
 			</div>
 		);
 	}
@@ -145,19 +283,47 @@ export default class Iphone extends Component {
 	parseResponse = (parsed_json) => {
 		var location = parsed_json["name"];
 		var cloudChance = parsed_json["clouds"]["all"];
-		var fl_temp = parsed_json["main"]["feels_like"];
-		var temp_c = parsed_json["main"]["temp"];
+		var fl_temp = Math.round(parsed_json["main"]["feels_like"]);
+		var temp_c = Math.round(parsed_json["main"]["temp"]);
 		var conditions = parsed_json["weather"]["0"]["description"];
-		var wea_icon = parsed_json["weather"]["0"]["icon"];
+		var humidity = parsed_json["main"]["humidity"];
+		var wind_speed;
+		this.state.units === "metric"
+			? (wind_speed = Math.round(parsed_json["wind"]["speed"] * 3.6))
+			: (wind_speed = Math.round(parsed_json["wind"]["speed"]));
+
+		var day = new Date();
+		var weekDay =
+			day.getDate() + "." + (day.getMonth() + 1) + "." + day.getFullYear();
+		// Create a new JavaScript Date object based on the timestamp
+		// multiplied by 1000 so that the argument is in milliseconds, not seconds.
+		var unix_timestamp = parsed_json["dt"];
+		var date = new Date(unix_timestamp * 1000);
+		// Hours part from the timestamp
+		var hours = date.getHours();
+		// Minutes part from the timestamp
+		var minutes = "0" + date.getMinutes();
+		// Seconds part from the timestamp
+		// var seconds = "0" + date.getSeconds();
+		// Will display time in 10:30:23 format
+		var formattedTime = " | " + hours + ":" + minutes.substr(-2);
+
+		const iconName = parsed_json["weather"]["0"]["icon"];
+		const iconApi = "http://openweathermap.org/img/wn/" + iconName + ".png";
 
 		// set states for fields so they could be rendered later on
 		this.setState({
+			dayDate: weekDay,
+			time: formattedTime,
 			locate: location,
 			cloud: "Chances of rain: " + cloudChance,
 			temp2: "Feels like: " + fl_temp,
 			temp: temp_c,
 			cond: conditions,
-			weather_icon: wea_icon,
+			humd: "Humidity: " + humidity,
+			wind: "Wind Speed: " + wind_speed,
+			// set icon state
+			icon: iconApi,
 		});
 	};
 }

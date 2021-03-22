@@ -1,44 +1,34 @@
 // import preact
-import { h, Component } from 'preact';
+import { h, Component } from "preact";
+import { Switch, BrowserRouter, Route } from "react-router-dom";
 
 // import required Components from 'components/'
-import Iphone from './iphone';
-import Ipad from './ipad';
+import Iphone from "./iphone";
+import Ipad from "./ipad";
+import IphoneSettings from "./iphone/settings";
 
 export default class App extends Component {
-//var App = React.createClass({
-
-	// once the components are loaded, checks if the url bar has a path with "ipad" in it, if so sets state of tablet to be true
-	componentDidMount() {
-		const urlBar = window.location.href;
-		if(urlBar.includes("ipad")) {
-			this.setState({
-				"isTablet": true
-			});
-		} else {
-			this.setState({
-				"isTablet": false
-			});
-		}
-	}
+	//var App = React.createClass({
 
 	/*
 		A render method to display the required Component on screen (iPhone or iPad) : selected by checking component's isTablet state
 	*/
-	render(){
-		if(this.state.isTablet){
-			return (
-				<div id="app">
-					<Ipad/ >
-				</div>   				
-			);
-		} 
-		else {
-			return (
-				<div id="app">
-					<Iphone/ >
-				</div>
-			);
-		}
+	render() {
+		return (
+			<div>
+				<BrowserRouter>
+					<Switch>
+						<Route path="/" exact={true} component={Iphone} />
+						<Route path="/ipad" exact={false} component={Ipad} />
+						<Route path="/iphone" exact={false} component={Iphone} />
+						<Route
+							path="/iphonesettings"
+							exact={false}
+							component={IphoneSettings}
+						/>
+					</Switch>
+				</BrowserRouter>
+			</div>
+		);
 	}
 }
